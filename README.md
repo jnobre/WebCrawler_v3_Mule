@@ -20,7 +20,7 @@ A nível de flow o funcionamento é semelhante ao anterior excepto pelo facto de
 
 Quando o utilizador seguir o link de confirmação, este será inserido ou removido da base de dados.
 
-##Adding New MOvies
+##Adding New Movies
 **XML File**
 
 Novos filmes podem ser adicionados ao sistema colocando um ficheiro XML com a informação sobre estes numa pasta específica (“movie_xml”).
@@ -31,6 +31,7 @@ Os filmes podem da mesma forma ser inseridos através de um cliente SOAP com seu
 A informação é recebida pelo sistema, convertida de XML para um objecto da classe correspondente e encaminhado para o flow seguinte onde será adicionado.
 
 **Adição dos Filmes**
+
 Para cada filme passado, são filtrados aqueles que não têm score. Caso o filme já exista, será enviada uma mensagem informativa para o servidor. Caso contrário o filme é adicionado à base de dados, sendo enviado um email ou criado um tweet conforme o rating do filme. Por fim, são actualizadas as estatísticas com base no género do filme.
 
 **Tweet**
@@ -55,7 +56,8 @@ Para obter o número de filmes processados é feita uma query a base de dados pa
 **Tabelas**
 
 Novas tabelas foram criadas e utilizadas neste projecto:
-Esforço
+
+
 (EM FALTA)
 
 
