@@ -1,0 +1,527 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<mule-configuration xmlns="http://www.mulesoft.com/tooling/messageflow" name="EmailHandler">
+    <global-element name="Gmail" type="http://www.mulesoft.org/schema/mule/smtp/gmail-connector" entity-id="Gmail#1">
+        <properties>
+            <property name="dispatcherPoolFactory-ref"/>
+            <property name="subject"/>
+            <property name="name" value="emailConnector"/>
+            <property name="bccAddresses"/>
+            <property name="fromAddress"/>
+            <property name="validateConnections"/>
+            <property name="dynamicNotification"/>
+            <property name="contentType"/>
+            <property name="replyToAddresses"/>
+            <property name="auxiliary;index" value="1"/>
+            <property name="ccAddresses"/>
+        </properties>
+    </global-element>
+    <global-unknown description="false" unknownName="processInboundFileModel" index="2" entity-id="global-unknown#1">
+        <content>&lt;model xmlns=&quot;http://www.mulesoft.org/schema/mule/core&quot; name=&quot;processInboundFileModel&quot;&gt;
+	    &lt;service name=&quot;processInboundFileService&quot;&gt;
+	      &lt;inbound&gt;
+	        &lt;file:inbound-endpoint xmlns:file=&quot;http://www.mulesoft.org/schema/mule/file&quot; path=&quot;./remoteFS&quot;&gt;
+	        &lt;/file:inbound-endpoint&gt;
+	      &lt;/inbound&gt;
+	     
+	      &lt;echo-component/&gt;
+	     
+	      &lt;outbound&gt;
+	        &lt;pass-through-router&gt;
+	          &lt;smtp:outbound-endpoint xmlns:smtp=&quot;http://www.mulesoft.org/schema/mule/smtp&quot; connector-ref=&quot;emailConnector&quot; host=&quot;smtp.gmail.com&quot; port=&quot;587&quot; user=&quot;ucfdesk%40gmail.com&quot; password=&quot;jomami123&quot; to=&quot;ucfdesk@gmail.com&quot; from=&quot;ucfdesk@gmail.com&quot; subject=&quot;Confirmation&quot;/&gt; 
+	        &lt;/pass-through-router&gt;
+	      &lt;/outbound&gt;
+	    &lt;/service&gt; 
+	  &lt;/model&gt;</content>
+    </global-unknown>
+    <global-element name="PostgreSQL Data Source" type="http://www.mulesoft.org/schema/mule/ee/jdbc/postgresql-data-source" entity-id="PostgreSQL Data Source#1">
+        <properties>
+            <property name="port"/>
+            <property name="host"/>
+            <property name="name" value="PostgreSQL_Data_Source"/>
+            <property name="loginTimeout"/>
+            <property name="transactionIsolation" value="UNSPECIFIED"/>
+            <property name="user" value="postgres"/>
+            <property name="password" value="postgres"/>
+            <property name="url" value="jdbc:postgresql://localhost:5432/imdbspy"/>
+            <property name="database"/>
+            <property name="auxiliary;index" value="10"/>
+        </properties>
+    </global-element>
+    <global-element name="Database" type="http://www.mulesoft.org/schema/mule/ee/jdbc/connector" entity-id="Database#1">
+        <properties>
+            <property name="dispatcherPoolFactory-ref"/>
+            <property name="handleOutputResultSets"/>
+            <property name="transactionPerMessage"/>
+            <property name="resultSetHandler-ref"/>
+            <property name="dataSource-ref to Bean" value="PostgreSQL_Data_Source"/>
+            <property name="pollingFrequency" value="0"/>
+            <property name="queryTimeout" value="-1"/>
+            <property name="name" value="PostgreSQL_JDBC_Connector"/>
+            <property name="validateConnections" value="true"/>
+            <property name="dynamicNotification"/>
+            <property name="queryRunner-ref"/>
+            <property name="auxiliary;index" value="11"/>
+            <property name="dataSource-ref to JDBC DataSource" value="PostgreSQL_Data_Source"/>
+        </properties>
+    </global-element>
+    <flow SubFlow="false" name="EmailHandler" type="http://www.mulesoft.org/schema/mule/core/flow" entity-id="8aa135be-bb9e-4fad-a158-5b31a12f938b">
+        <properties>
+            <property name="initialState"/>
+            <property name="processingStrategy2"/>
+            <property name="processingStrategy"/>
+            <property name="bussinessEventsLabel"/>
+            <property name="tracking:enable-default-events"/>
+            <property name="auxiliary;index" value="12"/>
+        </properties>
+        <lane hadOnlyOneElement="false" index="0" isChoiceOtherwiseLane="false" entity-id="compartment-lane#1">
+            <graphicalData x="0" y="0" width="0" height="0"/>
+            <endpoint direction="Inbound" message-exchange-pattern="RequestResponse" name="/subscribe" type="http://www.mulesoft.org/schema/mule/http/endpoint" entity-id="HTTP#1">
+                <graphicalData x="0" y="0" width="0" height="0"/>
+                <properties>
+                    <property name="port" value="8081"/>
+                    <property name="host" value="localhost"/>
+                    <property name="businessEventsLabel"/>
+                    <property name="followRedirects"/>
+                    <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/http/endpoint"/>
+                    <property name="keep-alive"/>
+                    <property name="contentType"/>
+                    <property name="disableTransportTransformer"/>
+                    <property name="password"/>
+                    <property name="exchange-pattern" value="request-response"/>
+                    <property name="tracking:enable-default-events"/>
+                    <property name="ref"/>
+                    <property name="httpLabel"/>
+                    <property name="transformer-refs"/>
+                    <property name="address"/>
+                    <property name="encoding"/>
+                    <property name="path" value="subscribe"/>
+                    <property name="responseTransformer-refs"/>
+                    <property name="method"/>
+                    <property name="user"/>
+                    <property name="mimeType"/>
+                    <property name="responseTimeout"/>
+                    <property name="auxiliary;index" value="13"/>
+                    <property name="connector-ref"/>
+                </properties>
+            </endpoint>
+            <splitter index="14" name="Choice" type="org.mule.tooling.ui.modules.core.pattern.cbr" entity-id="Choice#1">
+                <graphicalData x="0" y="0" width="0" height="0"/>
+                <properties>
+                    <property name=";INDEX" value="14"/>
+                    <property-collection name="dc6cc89c-89d7-4702-979f-2ac41ff7ee8c">
+                        <property name="choice.otherwise" value="true"/>
+                        <property-collection name="choice.attributes"/>
+                    </property-collection>
+                    <property-collection name="14b5f9a5-a568-43ef-869f-e6a21742f75e">
+                        <property name="choice.expression" value="#[message.inboundProperties['choice'] == 'unsubscribe']"/>
+                        <property-collection name="choice.attributes">
+                            <property name="expression" value="#[message.inboundProperties['choice'] == 'unsubscribe']"/>
+                        </property-collection>
+                    </property-collection>
+                </properties>
+                <pattern name="Choice" type="org.mule.tooling.ui.modules.core.pattern.cbr" entity-id="Choice#2">
+                    <properties>
+                        <property name=";INDEX" value="14"/>
+                        <property-collection name="dc6cc89c-89d7-4702-979f-2ac41ff7ee8c">
+                            <property name="choice.otherwise" value="true"/>
+                            <property-collection name="choice.attributes"/>
+                        </property-collection>
+                        <property-collection name="14b5f9a5-a568-43ef-869f-e6a21742f75e">
+                            <property name="choice.expression" value="#[message.inboundProperties['choice'] == 'unsubscribe']"/>
+                            <property-collection name="choice.attributes">
+<property name="expression" value="#[message.inboundProperties['choice'] == 'unsubscribe']"/>
+                            </property-collection>
+                        </property-collection>
+                    </properties>
+                </pattern>
+                <compartment entity-id="compartment#1">
+                    <lane hadOnlyOneElement="false" index="16" isChoiceOtherwiseLane="false" entity-id="14b5f9a5-a568-43ef-869f-e6a21742f75e">
+                        <pattern name="Email Body" type="http://www.mulesoft.org/schema/mule/core/expression-transformer" entity-id="Expression#1">
+                            <graphicalData x="0" y="0" width="0" height="0"/>
+                            <properties>
+<property name="expression" value="#[string: Please go to: http://localhost:8081/remove?email=#[message.inboundProperties['email']]&amp;digest=#[Boolean.parseBoolean(message.inboundProperties['digest'])] to confirm your request.]"/>
+<property name="returnClass"/>
+<property name="ignoreBadInput"/>
+<property name="returnSourceIfNull"/>
+<property name="name"/>
+<property name="encoding"/>
+<property name="custom-evaluator"/>
+<property name="evaluator"/>
+<property name="mimeType"/>
+<property name="auxiliary;index" value="16"/>
+                            </properties>
+                        </pattern>
+                        <endpoint direction="Outbound" message-exchange-pattern="OneWay" name="Email" type="http://www.mulesoft.org/schema/mule/file/endpoint" entity-id="File#1">
+                            <graphicalData x="0" y="0" width="0" height="0"/>
+                            <properties>
+<property name="reverseOrder"/>
+<property name="moveToPattern"/>
+<property name="pollingFrequency"/>
+<property name="businessEventsLabel"/>
+<property name="comparator"/>
+<property name="disableTransportTransformer"/>
+<property name="exchange-pattern" value="one-way"/>
+<property name="tracking:enable-default-events"/>
+<property name="ref"/>
+<property name="transformer-refs"/>
+<property name="moveToDirectory"/>
+<property name="address"/>
+<property name="fileAge"/>
+<property name="encoding"/>
+<property name="path" value="C:\Users\Miguel\MuleStudio\workspace\is_project_3\remoteFS\"/>
+<property name="outputPattern" value="email"/>
+<property name="responseTimeout" value="10000"/>
+<property name="mimeType"/>
+<property name="auxiliary;index" value="17"/>
+<property name="connector-ref"/>
+                            </properties>
+                        </endpoint>
+                        <pattern name="Success" type="http://www.mulesoft.org/schema/mule/core/expression-transformer" entity-id="Expression#2">
+                            <graphicalData x="0" y="0" width="0" height="0"/>
+                            <properties>
+<property name="expression" value="#[string: Confirmation email sent.]"/>
+<property name="returnClass"/>
+<property name="ignoreBadInput"/>
+<property name="returnSourceIfNull"/>
+<property name="name"/>
+<property name="encoding"/>
+<property name="custom-evaluator"/>
+<property name="evaluator"/>
+<property name="mimeType"/>
+<property name="auxiliary;index" value="18"/>
+                            </properties>
+                        </pattern>
+                    </lane>
+                    <lane hadOnlyOneElement="false" index="20" isChoiceOtherwiseLane="true" entity-id="dc6cc89c-89d7-4702-979f-2ac41ff7ee8c">
+                        <pattern name="Filter for email and digest" type="org.mule.tooling.ui.modules.core.filter.WildcardFilter" entity-id="Wildcard#1">
+                            <graphicalData x="0" y="0" width="0" height="0"/>
+                            <properties>
+<property name="pattern" value="*?email=*&amp;digest=*"/>
+<property name="caseSensitive" value="true"/>
+<property name="auxiliary;index" value="20"/>
+                            </properties>
+                        </pattern>
+                        <endpoint direction="Outbound" message-exchange-pattern="OneWay" name="Verify Email Existance" type="http://www.mulesoft.org/schema/mule/ee/jdbc/endpoint" entity-id="Database#2">
+                            <graphicalData x="0" y="0" width="0" height="0"/>
+                            <properties>
+<property name=""/>
+<property name="businessEventsLabel"/>
+<property name="pollingFrequency"/>
+<property name="queryTimeout" value="-1"/>
+<property name="disableTransportTransformer"/>
+<property name="exchange-pattern" value="request-response"/>
+<property name="queryKey" value="VerifyEmailExistance"/>
+<property name="tracking:enable-default-events"/>
+<property name="ref"/>
+<property name="transformer-refs"/>
+<property name="address"/>
+<property name="encoding"/>
+<property name="responseTransformer-refs"/>
+<property name="mimeType"/>
+<property name="responseTimeout"/>
+<property name="auxiliary;index" value="21"/>
+<property name="connector-ref" value="PostgreSQL_JDBC_Connector"/>
+<property-collection name="@http://www.mulesoft.org/schema/mule/ee/jdbc/query;0">
+    <property name="value" value="Select * From email_table Where email = #[message.inboundProperties['email']];"/>
+    <property name="isProcessed$$$$ " value="true"/>
+    <property name="auxiliary;wrapIn" value="22"/>
+    <property name="auxiliary;index" value="22"/>
+    <property name="key" value="VerifyEmailExistance"/>
+</property-collection>
+                            </properties>
+                        </endpoint>
+                        <pattern name="Byte Array to String" type="http://www.mulesoft.org/schema/mule/core/byte-array-to-string-transformer" entity-id="Byte Array to String#1">
+                            <graphicalData x="0" y="0" width="0" height="0"/>
+                            <properties>
+<property name="returnClass"/>
+<property name="ignoreBadInput"/>
+<property name="encoding"/>
+<property name="mimeType"/>
+<property name="auxiliary;index" value="23"/>
+                            </properties>
+                        </pattern>
+                        <splitter index="24" name="Choice" type="org.mule.tooling.ui.modules.core.pattern.cbr" entity-id="Choice#3">
+                            <graphicalData x="0" y="0" width="0" height="0"/>
+                            <properties>
+<property name=";INDEX" value="24"/>
+<property-collection name="48c0b030-39fd-4de8-bd87-9ce82ccf0bef">
+    <property name="choice.otherwise" value="true"/>
+    <property-collection name="choice.attributes"/>
+</property-collection>
+<property-collection name="6a1262dd-a2f1-44b3-b94b-dddb57c63292">
+    <property name="choice.expression" value="#[message.payload == '[]']"/>
+    <property-collection name="choice.attributes">
+        <property name="expression" value="#[message.payload == '[]']"/>
+    </property-collection>
+</property-collection>
+                            </properties>
+                            <pattern name="Choice" type="org.mule.tooling.ui.modules.core.pattern.cbr" entity-id="Choice#4">
+<properties>
+    <property name=";INDEX" value="24"/>
+    <property-collection name="48c0b030-39fd-4de8-bd87-9ce82ccf0bef">
+        <property name="choice.otherwise" value="true"/>
+        <property-collection name="choice.attributes"/>
+    </property-collection>
+    <property-collection name="6a1262dd-a2f1-44b3-b94b-dddb57c63292">
+        <property name="choice.expression" value="#[message.payload == '[]']"/>
+        <property-collection name="choice.attributes">
+            <property name="expression" value="#[message.payload == '[]']"/>
+        </property-collection>
+    </property-collection>
+</properties>
+                            </pattern>
+                            <compartment entity-id="compartment#2">
+<lane hadOnlyOneElement="false" index="26" isChoiceOtherwiseLane="false" entity-id="6a1262dd-a2f1-44b3-b94b-dddb57c63292">
+    <pattern name="Email Body" type="http://www.mulesoft.org/schema/mule/core/expression-transformer" entity-id="Expression#3">
+        <graphicalData x="0" y="0" width="0" height="0"/>
+        <properties>
+            <property name="expression" value="#[string: Please go to: http://localhost:8081/confirm?email=#[message.inboundProperties['email']]&amp;digest=#[Boolean.parseBoolean(message.inboundProperties['digest'])] to confirm your request.]"/>
+            <property name="returnClass"/>
+            <property name="ignoreBadInput"/>
+            <property name="returnSourceIfNull"/>
+            <property name="name"/>
+            <property name="encoding"/>
+            <property name="custom-evaluator"/>
+            <property name="evaluator"/>
+            <property name="mimeType"/>
+            <property name="auxiliary;index" value="26"/>
+        </properties>
+    </pattern>
+    <endpoint direction="Outbound" message-exchange-pattern="OneWay" name="Email" type="http://www.mulesoft.org/schema/mule/file/endpoint" entity-id="File#2">
+        <graphicalData x="0" y="0" width="0" height="0"/>
+        <properties>
+            <property name="reverseOrder"/>
+            <property name="moveToPattern"/>
+            <property name="pollingFrequency"/>
+            <property name="businessEventsLabel"/>
+            <property name="comparator"/>
+            <property name="disableTransportTransformer"/>
+            <property name="exchange-pattern" value="one-way"/>
+            <property name="tracking:enable-default-events"/>
+            <property name="ref"/>
+            <property name="transformer-refs"/>
+            <property name="moveToDirectory"/>
+            <property name="address"/>
+            <property name="fileAge"/>
+            <property name="encoding"/>
+            <property name="path" value="C:\Users\Miguel\MuleStudio\workspace\is_project_3\remoteFS\"/>
+            <property name="outputPattern" value="email"/>
+            <property name="responseTimeout" value="10000"/>
+            <property name="mimeType"/>
+            <property name="auxiliary;index" value="27"/>
+            <property name="connector-ref"/>
+        </properties>
+    </endpoint>
+    <pattern name="Success" type="http://www.mulesoft.org/schema/mule/core/expression-transformer" entity-id="Expression#4">
+        <graphicalData x="0" y="0" width="0" height="0"/>
+        <properties>
+            <property name="expression" value="#[string: Confirmation email sent.]"/>
+            <property name="returnClass"/>
+            <property name="ignoreBadInput"/>
+            <property name="returnSourceIfNull"/>
+            <property name="name"/>
+            <property name="encoding"/>
+            <property name="custom-evaluator"/>
+            <property name="evaluator"/>
+            <property name="mimeType"/>
+            <property name="auxiliary;index" value="28"/>
+        </properties>
+    </pattern>
+</lane>
+<lane hadOnlyOneElement="false" index="30" isChoiceOtherwiseLane="true" entity-id="48c0b030-39fd-4de8-bd87-9ce82ccf0bef">
+    <pattern name="End" type="http://www.mulesoft.org/schema/mule/core/expression-transformer" entity-id="Expression#5">
+        <graphicalData x="0" y="0" width="0" height="0"/>
+        <properties>
+            <property name="expression" value="#[string: Email already exists.]"/>
+            <property name="returnClass"/>
+            <property name="ignoreBadInput"/>
+            <property name="returnSourceIfNull"/>
+            <property name="name"/>
+            <property name="encoding"/>
+            <property name="custom-evaluator"/>
+            <property name="evaluator"/>
+            <property name="mimeType"/>
+            <property name="auxiliary;index" value="30"/>
+        </properties>
+    </pattern>
+</lane>
+                            </compartment>
+                        </splitter>
+                    </lane>
+                </compartment>
+            </splitter>
+        </lane>
+    </flow>
+    <flow SubFlow="false" name="EmailHandlerFlow1" type="http://www.mulesoft.org/schema/mule/core/flow" entity-id="d7da8aac-5752-4ee4-9b04-4a141395c32b">
+        <properties>
+            <property name="initialState"/>
+            <property name="processingStrategy2"/>
+            <property name="processingStrategy"/>
+            <property name="bussinessEventsLabel"/>
+            <property name="tracking:enable-default-events"/>
+            <property name="auxiliary;index" value="31"/>
+        </properties>
+        <lane hadOnlyOneElement="false" index="0" isChoiceOtherwiseLane="false" entity-id="compartment-lane#2">
+            <graphicalData x="0" y="0" width="0" height="0"/>
+            <endpoint direction="Inbound" message-exchange-pattern="RequestResponse" name="/confirm" type="http://www.mulesoft.org/schema/mule/http/endpoint" entity-id="HTTP#2">
+                <graphicalData x="0" y="0" width="0" height="0"/>
+                <properties>
+                    <property name="port" value="8081"/>
+                    <property name="host" value="localhost"/>
+                    <property name="businessEventsLabel"/>
+                    <property name="followRedirects"/>
+                    <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/http/endpoint"/>
+                    <property name="keep-alive"/>
+                    <property name="contentType"/>
+                    <property name="disableTransportTransformer"/>
+                    <property name="password"/>
+                    <property name="exchange-pattern" value="request-response"/>
+                    <property name="tracking:enable-default-events"/>
+                    <property name="ref"/>
+                    <property name="httpLabel"/>
+                    <property name="transformer-refs"/>
+                    <property name="address"/>
+                    <property name="encoding"/>
+                    <property name="path" value="confirm"/>
+                    <property name="responseTransformer-refs"/>
+                    <property name="method"/>
+                    <property name="user"/>
+                    <property name="mimeType"/>
+                    <property name="responseTimeout"/>
+                    <property name="auxiliary;index" value="32"/>
+                    <property name="connector-ref"/>
+                </properties>
+            </endpoint>
+            <endpoint direction="Outbound" message-exchange-pattern="OneWay" name="Susbcribe" type="http://www.mulesoft.org/schema/mule/ee/jdbc/endpoint" entity-id="Database#3">
+                <graphicalData x="0" y="0" width="0" height="0"/>
+                <properties>
+                    <property name=""/>
+                    <property name="businessEventsLabel"/>
+                    <property name="pollingFrequency"/>
+                    <property name="queryTimeout" value="-1"/>
+                    <property name="disableTransportTransformer"/>
+                    <property name="exchange-pattern" value="one-way"/>
+                    <property name="queryKey" value="Subscribe"/>
+                    <property name="tracking:enable-default-events"/>
+                    <property name="ref"/>
+                    <property name="transformer-refs"/>
+                    <property name="address"/>
+                    <property name="encoding"/>
+                    <property name="responseTransformer-refs"/>
+                    <property name="mimeType"/>
+                    <property name="responseTimeout"/>
+                    <property name="auxiliary;index" value="33"/>
+                    <property name="connector-ref" value="PostgreSQL_JDBC_Connector"/>
+                    <property-collection name="@http://www.mulesoft.org/schema/mule/ee/jdbc/query;0">
+                        <property name="value" value="Insert Into &quot;email_table&quot; Values(#[message.inboundProperties['email']], #[Boolean.parseBoolean(message.inboundProperties['digest'])]);"/>
+                        <property name="isProcessed$$$$ " value="true"/>
+                        <property name="auxiliary;wrapIn" value="34"/>
+                        <property name="auxiliary;index" value="34"/>
+                        <property name="key" value="Subscribe"/>
+                    </property-collection>
+                </properties>
+            </endpoint>
+            <pattern name="Success" type="http://www.mulesoft.org/schema/mule/core/expression-transformer" entity-id="Expression#6">
+                <graphicalData x="0" y="0" width="0" height="0"/>
+                <properties>
+                    <property name="expression" value="#[string: Success!]"/>
+                    <property name="returnClass"/>
+                    <property name="ignoreBadInput"/>
+                    <property name="returnSourceIfNull"/>
+                    <property name="name"/>
+                    <property name="encoding"/>
+                    <property name="custom-evaluator"/>
+                    <property name="evaluator"/>
+                    <property name="mimeType"/>
+                    <property name="auxiliary;index" value="35"/>
+                </properties>
+            </pattern>
+        </lane>
+    </flow>
+    <flow SubFlow="false" name="EmailHandlerFlow2" type="http://www.mulesoft.org/schema/mule/core/flow" entity-id="fb5fa3fd-1180-47d0-834e-2199f3389d14">
+        <properties>
+            <property name="initialState"/>
+            <property name="processingStrategy2"/>
+            <property name="processingStrategy"/>
+            <property name="bussinessEventsLabel"/>
+            <property name="tracking:enable-default-events"/>
+            <property name="auxiliary;index" value="36"/>
+        </properties>
+        <lane hadOnlyOneElement="false" index="0" isChoiceOtherwiseLane="false" entity-id="compartment-lane#3">
+            <graphicalData x="0" y="0" width="0" height="0"/>
+            <endpoint direction="Inbound" message-exchange-pattern="RequestResponse" name="/remove" type="http://www.mulesoft.org/schema/mule/http/endpoint" entity-id="HTTP#3">
+                <graphicalData x="0" y="0" width="0" height="0"/>
+                <properties>
+                    <property name="port" value="8081"/>
+                    <property name="host" value="localhost"/>
+                    <property name="businessEventsLabel"/>
+                    <property name="followRedirects"/>
+                    <property name="org.mule.tooling.ui.modules.core.widgets.meta.ModeAttribute" value="http://www.mulesoft.org/schema/mule/http/endpoint"/>
+                    <property name="keep-alive"/>
+                    <property name="contentType"/>
+                    <property name="disableTransportTransformer"/>
+                    <property name="password"/>
+                    <property name="exchange-pattern" value="request-response"/>
+                    <property name="tracking:enable-default-events"/>
+                    <property name="ref"/>
+                    <property name="httpLabel"/>
+                    <property name="transformer-refs"/>
+                    <property name="address"/>
+                    <property name="encoding"/>
+                    <property name="path" value="remove"/>
+                    <property name="responseTransformer-refs"/>
+                    <property name="method"/>
+                    <property name="user"/>
+                    <property name="mimeType"/>
+                    <property name="responseTimeout"/>
+                    <property name="auxiliary;index" value="37"/>
+                    <property name="connector-ref"/>
+                </properties>
+            </endpoint>
+            <endpoint direction="Outbound" message-exchange-pattern="OneWay" name="Unsubscribe" type="http://www.mulesoft.org/schema/mule/ee/jdbc/endpoint" entity-id="Database#4">
+                <graphicalData x="0" y="0" width="0" height="0"/>
+                <properties>
+                    <property name=""/>
+                    <property name="businessEventsLabel"/>
+                    <property name="pollingFrequency"/>
+                    <property name="queryTimeout" value="-1"/>
+                    <property name="disableTransportTransformer"/>
+                    <property name="exchange-pattern" value="one-way"/>
+                    <property name="queryKey" value="Unsubscribe"/>
+                    <property name="tracking:enable-default-events"/>
+                    <property name="ref"/>
+                    <property name="transformer-refs"/>
+                    <property name="address"/>
+                    <property name="encoding"/>
+                    <property name="responseTransformer-refs"/>
+                    <property name="mimeType"/>
+                    <property name="responseTimeout"/>
+                    <property name="auxiliary;index" value="38"/>
+                    <property name="connector-ref" value="PostgreSQL_JDBC_Connector"/>
+                    <property-collection name="@http://www.mulesoft.org/schema/mule/ee/jdbc/query;0">
+                        <property name="value" value="Delete from email_table where email = #[message.inboundProperties['email']];"/>
+                        <property name="isProcessed$$$$ " value="true"/>
+                        <property name="auxiliary;wrapIn" value="39"/>
+                        <property name="auxiliary;index" value="39"/>
+                        <property name="key" value="Unsubscribe"/>
+                    </property-collection>
+                </properties>
+            </endpoint>
+            <pattern name="Success" type="http://www.mulesoft.org/schema/mule/core/expression-transformer" entity-id="Expression#7">
+                <graphicalData x="0" y="0" width="0" height="0"/>
+                <properties>
+                    <property name="expression" value="#[string: Unsubscribed.]"/>
+                    <property name="returnClass"/>
+                    <property name="ignoreBadInput"/>
+                    <property name="returnSourceIfNull"/>
+                    <property name="name"/>
+                    <property name="encoding"/>
+                    <property name="custom-evaluator"/>
+                    <property name="evaluator"/>
+                    <property name="mimeType"/>
+                    <property name="auxiliary;index" value="40"/>
+                </properties>
+            </pattern>
+        </lane>
+    </flow>
+</mule-configuration>
