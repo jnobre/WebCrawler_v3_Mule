@@ -4,6 +4,7 @@ Implementação de uma aplicação empresarial cujo objectivo é receber informa
 
 ##Flows
 **Subscription to Movie Information**
+
 **Static Web Page **
 
 	1. Um utilizador pode fazer subscribe ou unsubscribe através de uma página web.
